@@ -12,8 +12,45 @@ function legacyCopy(value){const input=document.createElement('textarea');input.
 document.querySelectorAll('.copy-gift').forEach(button=>button.addEventListener('click',async()=>{let copied=false;try{await navigator.clipboard.writeText(button.dataset.copy);copied=true}catch{copied=legacyCopy(button.dataset.copy)}button.closest('.bank-card').querySelector('.copy-status').textContent=copied?'✓ Αντιγράφηκε!':'Για αντιγραφή: '+button.dataset.copy}));
 const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');revealObserver.unobserve(entry.target)}}),{threshold:.12});document.querySelectorAll('.reveal-up,.reveal-down').forEach(el=>revealObserver.observe(el));
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)'),photo=$('#couplePhoto'),photoPanel=$('.photo-panel'),flowers=[...document.querySelectorAll('.scroll-flower')];let scrollFrame=0;
-function animateScroll(){scrollFrame=0;if(reduceMotion.matches){photoPanel.style.setProperty('--photo-x','0px');photoPanel.style.setProperty('--photo-x','0px');photoPanel.style.setProperty('--photo-shift','0px');photoPanel.style.setProperty('--photo-scale','1');return}const rect=photoPanel.getBoundingClientRect();if(rect.bottom<=0||rect.top>=innerHeight||!photo.naturalHeight)return;const section=photoPanel.closest('.invitation').getBoundingClientRect(),progress=Math.max(0,Math.min(1,innerWidth>760?(innerHeight-section.top)/(innerHeight+section.height):(innerHeight-rect.top)/(innerHeight+rect.height))),boxH=photo.offsetHeight,boxW=photo.offsetWidth,fit=Math.max(boxW/photo.naturalWidth,boxH/photo.naturalHeight),renderH=photo.naturalHeight*fit,positionY=parseFloat(getComputedStyle(photo).objectPosition.split(' ')[1])/100,contentTop=(boxH-renderH)*(Number.isFinite(positionY)?positionY:.4),eyeY=contentTop+renderH*.42,originY=boxH*.43,visibleTop=Math.max(rect.top,16),visibleBottom=Math.min(rect.bottom,innerHeight-16),target=Math.max(0,Math.min(rect.height,(visibleTop+visibleBottom)/2-rect.top)),needed=Math.max(target/(eyeY-contentTop),(rect.height-target)/(contentTop+renderH-eyeY)),scale=Math.min(2.15,Math.max(1.035+progress*.20,needed)),baseEye=photo.offsetTop+originY+(eyeY-originY)*scale,minShift=rect.height-(photo.offsetTop+originY+(contentTop+renderH-originY)*scale),maxShift=-(photo.offsetTop+originY+(contentTop-originY)*scale),shift=Math.max(minShift,Math.min(maxShift,target-baseEye)),renderW=photo.naturalWidth*fit,positionX=parseFloat(getComputedStyle(photo).objectPosition.split(' ')[0])/100,contentLeft=(boxW-renderW)*(Number.isFinite(positionX)?positionX:.48),eyeX=contentLeft+renderW*.405,originX=boxW*.47,baseEyeX=photo.offsetLeft+originX+(eyeX-originX)*scale,minX=rect.width-(photo.offsetLeft+originX+(contentLeft+renderW-originX)*scale),maxX=-(photo.offsetLeft+originX+(contentLeft-originX)*scale),shiftX=Math.max(minX,Math.min(maxX,rect.width/2-baseEyeX));photoPanel.style.setProperty('--photo-x',shiftX.toFixed(2)+'px');photoPanel.style.setProperty('--photo-shift',shift.toFixed(2)+'px');photoPanel.style.setProperty('--photo-scale',scale.toFixed(4))}
-window.addEventListener('scroll',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(animateScroll)},{passive:true});window.addEventListener('resize',()=>{if(!scrollFrame)scrollFrame=requestAnimationFrame(animateScroll)});reduceMotion.addEventListener('change',animateScroll);animateScroll();
+let photoCurrent=null,photoGoal=null,photoDirty=true,photoLastFrame=0,photoLastScroll=performance.now(),photoIdle=0;
+const photoClamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
+function photoTarget(){const rect=photoPanel.getBoundingClientRect();if(rect.bottom<=0||rect.top>=innerHeight||!photo.naturalHeight)return;const section=photoPanel.closest('.invitation').getBoundingClientRect(),progress=Math.max(0,Math.min(1,innerWidth>760?(innerHeight-section.top)/(innerHeight+section.height):(innerHeight-rect.top)/(innerHeight+rect.height))),boxH=photo.offsetHeight,boxW=photo.offsetWidth,fit=Math.max(boxW/photo.naturalWidth,boxH/photo.naturalHeight),renderH=photo.naturalHeight*fit,positionY=parseFloat(getComputedStyle(photo).objectPosition.split(' ')[1])/100,contentTop=(boxH-renderH)*(Number.isFinite(positionY)?positionY:.4),eyeY=contentTop+renderH*.42,originY=boxH*.43,visibleTop=Math.max(rect.top,16),visibleBottom=Math.min(rect.bottom,innerHeight-16),target=Math.max(0,Math.min(rect.height,(visibleTop+visibleBottom)/2-rect.top)),needed=Math.max(target/(eyeY-contentTop),(rect.height-target)/(contentTop+renderH-eyeY)),scale=Math.min(2.15,Math.max(1.035+progress*.20,needed)),baseEye=photo.offsetTop+originY+(eyeY-originY)*scale,minShift=rect.height-(photo.offsetTop+originY+(contentTop+renderH-originY)*scale),maxShift=-(photo.offsetTop+originY+(contentTop-originY)*scale),shift=Math.max(minShift,Math.min(maxShift,target-baseEye)),renderW=photo.naturalWidth*fit,positionX=parseFloat(getComputedStyle(photo).objectPosition.split(' ')[0])/100,contentLeft=(boxW-renderW)*(Number.isFinite(positionX)?positionX:.48),eyeX=contentLeft+renderW*.405,originX=boxW*.47,baseEyeX=photo.offsetLeft+originX+(eyeX-originX)*scale,minX=rect.width-(photo.offsetLeft+originX+(contentLeft+renderW-originX)*scale),maxX=-(photo.offsetLeft+originX+(contentLeft-originX)*scale),shiftX=Math.max(minX,Math.min(maxX,rect.width/2-baseEyeX));return {x:shiftX,y:shift,s:scale,rect,eyeX,eyeY,originX,originY,contentLeft,contentTop,renderW,renderH,left:photo.offsetLeft,top:photo.offsetTop}}
+function paintPhoto(x,y,s){
+  photoPanel.style.setProperty('--photo-x',x.toFixed(3)+'px');
+  photoPanel.style.setProperty('--photo-shift',y.toFixed(3)+'px');
+  photoPanel.style.setProperty('--photo-scale',s.toFixed(6));
+}
+function animateScroll(now=performance.now()){
+  scrollFrame=0;
+  if(reduceMotion.matches||document.hidden){photoLastFrame=0;photo.style.willChange='auto';if(reduceMotion.matches){paintPhoto(0,0,1);photoCurrent=null}return}
+  if(photoDirty){photoGoal=photoTarget();photoDirty=false}
+  if(!photoGoal){photoLastFrame=0;photo.style.willChange='auto';return}
+  const g=photoGoal,dt=Math.min(50,photoLastFrame?now-photoLastFrame:16.67),blend=1-Math.exp(-dt/180);
+  photoLastFrame=now;
+  if(!photoCurrent)photoCurrent={x:g.x,y:g.y,s:g.s};
+  photoCurrent.x+=(g.x-photoCurrent.x)*blend;
+  photoCurrent.y+=(g.y-photoCurrent.y)*blend;
+  photoCurrent.s+=(g.s-photoCurrent.s)*blend;
+  // Idle motion fades in/out without changing the scroll framing targets.
+  const resting=now-photoLastScroll>650;
+  photoIdle+=((resting?1:0)-photoIdle)*(1-Math.exp(-dt/900));
+  const phase=now/9000,extra=.006*(1-Math.cos(phase))*photoIdle,s=photoCurrent.s+extra;
+  let x=photoCurrent.x-(g.eyeX-g.originX)*extra+Math.sin(phase*.83)*.8*photoIdle;
+  let y=photoCurrent.y-(g.eyeY-g.originY)*extra+Math.sin(phase*.67)*.6*photoIdle;
+  // Keep the source covering the frame, including during easing and idle drift.
+  x=photoClamp(x,g.rect.width-(g.left+g.originX+(g.contentLeft+g.renderW-g.originX)*s),-(g.left+g.originX+(g.contentLeft-g.originX)*s));
+  y=photoClamp(y,g.rect.height-(g.top+g.originY+(g.contentTop+g.renderH-g.originY)*s),-(g.top+g.originY+(g.contentTop-g.originY)*s));
+  photo.style.willChange='transform';
+  paintPhoto(x,y,s);
+  scrollFrame=requestAnimationFrame(animateScroll);
+}
+function schedulePhoto(){photoDirty=true;if(!scrollFrame)scrollFrame=requestAnimationFrame(animateScroll)}
+window.addEventListener('scroll',()=>{photoLastScroll=performance.now();schedulePhoto()},{passive:true});
+window.addEventListener('resize',schedulePhoto);
+photo.addEventListener('load',schedulePhoto);
+reduceMotion.addEventListener('change',()=>{if(scrollFrame)cancelAnimationFrame(scrollFrame);scrollFrame=0;photoDirty=true;animateScroll()});
+document.addEventListener('visibilitychange',schedulePhoto);
+schedulePhoto();
 
 // Production configuration is assigned after the Google deployment is approved.
 const WEDDING_ENDPOINT='https://script.google.com/macros/s/AKfycbxMYUkIipAofr5_psUrQE4S04gU5XLByS8wIeMRAQFjfIrdCmmB8wsurUokLZ-9sx5NMw/exec';

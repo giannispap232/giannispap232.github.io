@@ -113,3 +113,6 @@ body.locked .scroll-hint{display:none}
 
 /* Center the midpoint of both gazes throughout the scroll zoom. */
 .photo-panel img{transform:translate(var(--photo-x,0px),var(--photo-shift,0px)) scale(var(--photo-scale,1.04))}
+
+/* The invitation already supplies equal mobile gutters. */
+@media(max-width:760px){.photo-panel{width:100%;margin:0 auto;justify-self:center}}
