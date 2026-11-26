@@ -110,3 +110,6 @@ body.locked .scroll-hint{display:none}
 .attendance-row select{display:block;box-sizing:border-box;height:48px;margin:0!important}
 .attendance-row .attendance-narrow{display:none}
 @media(max-width:600px){.attendance-row{gap:12px}.attendance-row legend,.attendance-row .attendance-title{font-size:16px!important}.attendance-row .attendance-wide{display:none}.attendance-row .attendance-narrow{display:inline}.attendance-row .attendance-answers{gap:12px}}
+
+/* Center the midpoint of both gazes throughout the scroll zoom. */
+.photo-panel img{transform:translate(var(--photo-x,0px),var(--photo-shift,0px)) scale(var(--photo-scale,1.04))}
