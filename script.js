@@ -5,8 +5,8 @@ function musicState(){
  const playing=!audio.paused;
  music.setAttribute('aria-pressed',String(playing));
  music.setAttribute('aria-label',playing?'Παύση μουσικής':'Αναπαραγωγή μουσικής');
- const control=playing?'<rect x="5.3" y="19" width="2.5" height="8" rx=".6" fill="currentColor"/><rect x="10.2" y="19" width="2.5" height="8" rx=".6" fill="currentColor"/>':'<path d="m6.7 18.8 7 4.2-7 4.2z" fill="currentColor"/>';
- music.innerHTML='<svg class="music-combined" viewBox="0 0 34 34" aria-hidden="true" focusable="false"><path d="M19 23V7l9-3v8l-9 3" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/><ellipse cx="15.5" cy="24" rx="5" ry="3.5" fill="currentColor" transform="rotate(-20 15.5 24)"/><circle cx="9" cy="23" r="8.5" fill="#521c2a" stroke="currentColor" stroke-width="1.1"/>'+control+'</svg>';
+ const control=playing?'<rect x="4.4" y="25" width="2.5" height="8" rx=".6" fill="currentColor"/><rect x="9.2" y="25" width="2.5" height="8" rx=".6" fill="currentColor"/>':'<path d="m5.8 25 6.7 4-6.7 4z" fill="currentColor"/>';
+ music.innerHTML='<svg class="music-combined" viewBox="0 0 34 38" aria-hidden="true" focusable="false"><path d="M19 24V7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m19 7 9-3v8l-9 3z" fill="currentColor"/><ellipse cx="15.5" cy="24" rx="5" ry="3.5" fill="currentColor" transform="rotate(-20 15.5 24)"/><circle cx="8.5" cy="29" r="7" fill="#521c2a" stroke="currentColor" stroke-width="1.1"/>'+control+'</svg>';
 }
 musicState();
 $('#envelope').addEventListener('click',()=>{$('#envelope').classList.add('is-open');audio.play().then(musicState).catch(musicState);setTimeout(()=>{$('#content').inert=false;$('#content').removeAttribute('aria-hidden');document.body.classList.remove('locked');$('#intro').classList.add('open');music.hidden=false;window.scrollTo(0,0);setTimeout(()=>{$('#intro').hidden=true},900)},1200)},{once:true});
