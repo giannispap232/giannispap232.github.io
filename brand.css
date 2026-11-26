@@ -17,3 +17,37 @@
 .gift .eyebrow{margin:0 auto 26px}
 @media(min-width:761px){.photo-panel{width:calc(100% - clamp(24px,4vw,64px));margin-left:clamp(24px,4vw,64px);margin-right:0}.photo-panel img{object-position:48% 40%}}
 @media(max-width:760px){.photo-panel{width:calc(100% - 24px);margin:28px 0 0 24px;min-height:0!important;height:auto!important;aspect-ratio:3/4}.photo-panel img{object-position:48% 40%}.day-card{min-height:520px}.day-card a{margin-top:26px}.day-card .reception-intro{margin:0 0 12px}}
+
+/* Readable supporting type and a true vector music control. */
+.music{display:grid!important;place-items:center;padding:0!important;line-height:1!important}
+.music[hidden]{display:none!important}
+.music svg{display:block;width:24px;height:24px;flex-shrink:0}
+.countdown small{font-size:clamp(.9rem,1.25vw,1.05rem)!important;line-height:1.5}
+.family-name{display:block}
+.family-group{display:block;margin-top:18px}
+@media(min-width:761px){
+ .countdown-section h2,.wedding-day>h2,.album h2{font-size:clamp(2.25rem,3.2vw,3.35rem)!important;line-height:1.25!important}
+ .invite-card .people h2{font-size:2rem!important}
+ .invite-card .people p{font-size:clamp(1.25rem,1.7vw,1.45rem)!important;line-height:1.65!important}
+ .invite-card .verse{font-size:clamp(1.25rem,1.7vw,1.5rem)!important}
+ .exact-names{max-width:350px}
+ .day-card h3{font-size:clamp(2rem,2.8vw,2.6rem)!important}
+ .day-card p{font-size:clamp(1.15rem,1.5vw,1.35rem)}
+ .day-card h4{font-size:clamp(1.35rem,1.9vw,1.7rem)!important}
+ .day-card a{font-size:1.1rem}
+ .rsvp label,.rsvp legend,.rsvp input,.rsvp select,.rsvp textarea{font-size:1.125rem}
+ .rsvp-card .deadline{font-size:1.15rem}
+ .gift .eyebrow{font-size:1.2rem}
+ .copy-status{font-size:1rem!important}
+ .album>p,.gift-intro{font-size:1.35rem}
+}
+
+/* Stable viewport instruction, single image layer and balanced gift spacing. */
+.intro .tap{display:block!important;position:absolute;z-index:30;left:18px;right:18px;bottom:max(24px,env(safe-area-inset-bottom));margin:0!important;text-align:center;font:500 clamp(15px,1.5vw,19px)/1.5 Invitation,Georgia,serif;letter-spacing:.08em;color:#521c2a;pointer-events:none;text-transform:none;text-shadow:0 1px 5px #fff}
+.photo-panel{background:none!important;background-image:none!important;border:0!important;box-shadow:none!important}
+.photo-panel::before,.photo-panel::after{display:none!important;content:none!important}
+.photo-panel img{display:block;border:0;outline:0;backface-visibility:hidden;transform:translateY(var(--photo-shift,0px)) scale(1.03);will-change:auto}
+.invitation{background:#faf5e9}
+.gift-options{max-width:1050px;margin-inline:auto;align-items:stretch}
+.gift>p.gift-thanks{margin:40px auto 0!important;text-align:center;line-height:1.6}
+@media(min-width:761px){.invitation{overflow:visible!important}.photo-panel{position:sticky;top:24px;align-self:start;margin-top:48px;margin-bottom:48px}.invite-card{padding-top:48px;padding-bottom:48px}}
