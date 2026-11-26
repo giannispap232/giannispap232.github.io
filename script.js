@@ -25,7 +25,7 @@ function animateScroll(now=performance.now()){
   if(reduceMotion.matches||document.hidden){photoLastFrame=0;photo.style.willChange='auto';if(reduceMotion.matches){paintPhoto(0,0,1);photoCurrent=null}return}
   if(photoDirty){photoGoal=photoTarget();photoDirty=false}
   if(!photoGoal){photoLastFrame=0;photo.style.willChange='auto';return}
-  const g=photoGoal,dt=Math.min(50,photoLastFrame?now-photoLastFrame:16.67),blend=1-Math.exp(-dt/180);
+  const g=photoGoal,dt=Math.min(50,photoLastFrame?now-photoLastFrame:16.67),blend=1-Math.exp(-dt/360);
   photoLastFrame=now;
   if(!photoCurrent)photoCurrent={x:g.x,y:g.y,s:g.s};
   photoCurrent.x+=(g.x-photoCurrent.x)*blend;
