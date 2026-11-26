@@ -70,3 +70,5 @@
 .photo-panel{isolation:isolate}
 .photo-panel img{transform-origin:47% 43%;transform:translateY(var(--photo-shift,0px)) scale(var(--photo-scale,1.04));backface-visibility:hidden}
 @media(prefers-reduced-motion:reduce){.photo-panel img{transform:none!important}}
+
+.day-card>h4{align-self:start!important}
