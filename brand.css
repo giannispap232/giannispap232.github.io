@@ -101,3 +101,12 @@ body.locked .scroll-hint{display:none}
 @media(max-width:480px){.attendance-row{gap:12px}.attendance-row legend,.attendance-row>label{font-size:17px}.attendance-row .choice{font-size:18px;margin-right:9px!important}}
 
 .koumparos-contact{margin-top:28px!important;justify-content:center!important;text-align:center}
+
+/* Equal title baselines and equal answer baselines for RSVP. */
+.attendance-row{align-items:start;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.attendance-row legend,.attendance-row .attendance-title{display:block;box-sizing:border-box;white-space:nowrap;font-size:18px!important;line-height:26px!important;height:26px;margin:0 0 10px!important;padding:0!important}
+.attendance-row .attendance-answers{display:flex;align-items:center;gap:18px;height:48px}
+.attendance-row .attendance-answers .choice{margin:0!important;line-height:1.3;gap:7px}
+.attendance-row select{display:block;box-sizing:border-box;height:48px;margin:0!important}
+.attendance-row .attendance-narrow{display:none}
+@media(max-width:600px){.attendance-row{gap:12px}.attendance-row legend,.attendance-row .attendance-title{font-size:16px!important}.attendance-row .attendance-wide{display:none}.attendance-row .attendance-narrow{display:inline}.attendance-row .attendance-answers{gap:12px}}
