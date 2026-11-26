@@ -53,7 +53,8 @@ uploadButton.addEventListener('click',()=>{
   if(!window.cloudinary){uploadStatus.textContent='Η μεταφόρτωση δεν φορτώθηκε. Ανανεώστε τη σελίδα και δοκιμάστε ξανά.';return}
   if(!uploadWidget)uploadWidget=window.cloudinary.createUploadWidget({
     cloudName:'cxeukl4a',uploadPreset:'wedding_guests_2026',sources:['local','camera'],multiple:true,
-    clientAllowedFormats:['jpg','jpeg','png','webp','heic'],maxFileSize:15000000,maxFiles:20,
+    clientAllowedFormats:['jpg','jpeg','png','webp','heic'],maxFileSize:40000000,maxFiles:20,
+    maxImageWidth:2048,maxImageHeight:2048,validateMaxWidthHeight:false,
     showAdvancedOptions:false,showCompletedButton:true,singleUploadAutoClose:false,
     text:{el:{menu:{files:'Από τη συσκευή',camera:'Κάμερα'},local:{browse:'Επιλογή φωτογραφιών',dd_title_single:'Σύρετε μία φωτογραφία εδώ',dd_title_multi:'Σύρετε φωτογραφίες εδώ'},queue:{title:'Αρχεία για ανέβασμα',title_uploading:'Οι φωτογραφίες ανεβαίνουν',title_uploading_with_counter:'Ανεβαίνουν {{num}} φωτογραφίες',title_uploading_processing:'Γίνεται επεξεργασία',done:'Ολοκληρώθηκε',mini_title:'Ανέβηκαν',mini_title_uploading:'Ανεβαίνουν'},notifications:{general_error:'Κάτι πήγε στραβά. Δοκιμάστε ξανά.',completed:'Η μεταφόρτωση ολοκληρώθηκε.'}}}
   },(error,result)=>{
