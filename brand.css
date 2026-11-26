@@ -116,3 +116,14 @@ body.locked .scroll-hint{display:none}
 
 /* The invitation already supplies equal mobile gutters. */
 @media(max-width:760px){.photo-panel{width:100%;margin:0 auto;justify-self:center}}
+
+/* Compact venue cards retain identical row baselines without empty spacer rows. */
+.day-card{min-height:0!important;padding:30px 24px!important;grid-template-rows:54px 44px 44px 30px minmax(70px,auto) 52px;gap:10px;align-content:start;border-radius:24px}
+.day-card>.day-icon{height:54px;line-height:1}
+.day-card>.day-icon img{height:54px!important;max-width:76px;object-fit:contain}
+.day-card>h3{font-size:2rem!important;line-height:1.2}
+.day-card>h4{align-self:center!important;line-height:1.45}
+.day-card>a{grid-row:6;padding:12px 24px!important;line-height:1.3;box-sizing:border-box}
+@media(max-width:760px){.day-card{padding:26px 20px!important;grid-template-rows:48px 40px 42px 28px minmax(68px,auto) 48px;gap:8px}.day-card>.day-icon,.day-card>.day-icon img{height:48px!important}.day-card h4{font-size:1.25rem!important}.day-card .reception-intro{font-size:1.1rem!important}}
+.music{width:54px!important;height:54px!important;gap:0!important;padding:9px!important;border-radius:50%!important}
+.music .music-combined{width:34px!important;height:34px!important;display:block}
