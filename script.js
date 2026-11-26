@@ -1,7 +1,7 @@
 'use strict';
 if('scrollRestoration'in history)history.scrollRestoration='manual';
 const $=selector=>document.querySelector(selector),audio=$('#audio'),music=$('#music');
-function musicState(){music.setAttribute('aria-pressed',String(!audio.paused));music.setAttribute('aria-label',audio.paused?'Αναπαραγωγή μουσικής':'Παύση μουσικής');music.innerHTML=audio.paused?'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5.5a1 1 0 0 1 1.5-.86l10 6a1 1 0 0 1 0 1.72l-10 6A1 1 0 0 1 8 17.5z"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="5" width="4" height="14" rx=".8" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx=".8" fill="currentColor"/></svg>'}
+function musicState(){music.setAttribute('aria-pressed',String(!audio.paused));music.setAttribute('aria-label',audio.paused?'Αναπαραγωγή μουσικής':'Παύση μουσικής');music.innerHTML=audio.paused?'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 5.5a1 1 0 0 1 1.5-.86l10 6a1 1 0 0 1 0 1.72l-10 6A1 1 0 0 1 8 17.5z"/></svg>':'<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect x="6" y="5" width="4" height="14" rx=".8" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx=".8" fill="currentColor"/></svg>';music.insertAdjacentHTML('beforeend','<svg class="music-note" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M9 4v11.2a4 4 0 1 0 2 3.5V8l8-2v7.2a4 4 0 1 0 2 3.5V1z"/></svg>')}
 $('#envelope').addEventListener('click',()=>{$('#envelope').classList.add('is-open');audio.play().then(musicState).catch(musicState);setTimeout(()=>{$('#content').inert=false;$('#content').removeAttribute('aria-hidden');document.body.classList.remove('locked');$('#intro').classList.add('open');music.hidden=false;window.scrollTo(0,0);setTimeout(()=>{$('#intro').hidden=true},900)},1200)},{once:true});
 music.addEventListener('click',()=>{if(audio.paused)audio.play().then(musicState).catch(musicState);else{audio.pause();musicState()}});
 $('#content').setAttribute('tabindex','-1');
@@ -65,3 +65,7 @@ uploadButton.addEventListener('click',()=>{
   });
   uploadWidget.open();
 });
+
+musicState();
+const scrollHint=$('#scrollHint');
+if(scrollHint){window.addEventListener('scroll',()=>{if(scrollY>40&&!document.body.classList.contains('locked'))scrollHint.hidden=true},{passive:true});scrollHint.addEventListener('click',()=>{$('#countdown').scrollIntoView({behavior:reduceMotion.matches?'auto':'smooth',block:'start'});scrollHint.hidden=true})}
