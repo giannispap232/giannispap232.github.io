@@ -81,3 +81,12 @@
 body.locked .scroll-hint{display:none}
 @keyframes scroll-cue{0%,100%{opacity:1;transform:translateY(0)}50%{opacity:.35;transform:translateY(5px)}}
 @media(prefers-reduced-motion:reduce){.scroll-hint svg{animation:none}}
+
+/* Fit all five name/date rows into the first visible screen. */
+.date-hero{height:100svh!important;min-height:100svh!important;max-height:100svh;box-sizing:border-box;padding:16px 12px 76px!important;overflow:clip;display:block!important}
+.date-hero .date-stack{height:100%;width:100%;box-sizing:border-box;display:grid!important;grid-template-columns:minmax(0,1fr)!important;grid-template-rows:repeat(5,minmax(0,1fr));gap:min(1.6svh,14px)!important;align-items:center!important;justify-items:center!important;align-content:stretch!important;line-height:1!important}
+.date-hero .date-stack .hero-number{font-size:min(19svh,30vw)!important;line-height:.72!important;margin:0!important;padding:0!important}
+.date-hero .date-stack b{width:min(84vw,80svh,490px)!important;height:100%!important;max-height:16svh;min-height:0;min-width:0;margin:0!important;display:flex!important;align-items:center;justify-content:center}
+.date-hero .date-stack .groom-name{width:min(77vw,72svh,440px)!important}
+.date-hero .date-stack b img{width:100%;height:100%;max-height:100%;object-fit:contain}
+.date-hero .middle-date{display:flex;align-items:center;justify-content:center;height:100%;min-height:0}
