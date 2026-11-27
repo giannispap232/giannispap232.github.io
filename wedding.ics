@@ -1,0 +1,17 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ioannis Aikaterini//Wedding//EL
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:ioannis-aikaterini-20261227@giannispap232.github.io
+DTSTAMP:20261128T000000Z
+DTSTART:20261227T143000Z
+DTEND:20261227T153000Z
+SUMMARY:Γάμος Ιωάννη & Αικατερίνης
+LOCATION:Ιερός Μητροπολιτικός Ναός Αγίου Αχι
+ λλίου Λαρίσης
+DESCRIPTION:Σας περιμένουμε με χαρά!
+URL:https://giannispap232.github.io/
+END:VEVENT
+END:VCALENDAR
