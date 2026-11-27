@@ -157,3 +157,6 @@ body.locked .scroll-hint{display:none}
 footer .phone-links a{display:inline-flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px 8px}
 footer .phone-links a b,footer .phone-links a span{display:inline!important;line-height:1.5}
 .gift-options .bank-card h3{font-size:1.8rem!important;line-height:1.3}
+
+/* Remove the inherited 600px form width inside the wider RSVP card. */
+@media(min-width:761px){#rsvpForm{width:100%!important;max-width:none!important;min-width:0;box-sizing:border-box}#rsvpForm>label,#rsvpForm>.attendance-row{width:100%;min-width:0}#rsvpForm input:not([type=radio]),#rsvpForm select,#rsvpForm textarea{width:100%;min-width:0}}
