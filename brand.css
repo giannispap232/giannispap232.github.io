@@ -168,3 +168,6 @@ footer .phone-links a b,footer .phone-links a span{display:inline!important;line
 .calendar-options{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);width:260px;padding:8px;background:#fffcf5;border:1px solid #c9a76c;border-radius:12px;box-shadow:0 8px 24px #521c2a25}
 .day-card .calendar-options a{display:block;margin:0;padding:11px 9px!important;border-radius:6px;background:transparent;color:#521c2a;box-shadow:none;font-size:1rem;text-decoration:none}
 .calendar-options a:hover,.calendar-options a:focus-visible{background:#f0e7d6}
+
+/* Shared fixed venue row keeps both map buttons exactly aligned. */
+@media(min-width:761px){.day-card{grid-template-rows:54px 44px 50px 30px 84px 52px 28px}}
