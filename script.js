@@ -9,10 +9,31 @@ function musicState(){
  music.innerHTML='<svg class="music-combined" viewBox="0 0 34 38" aria-hidden="true" focusable="false"><path d="M19 24V7" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="m19 7 9-3v8l-9 3z" fill="currentColor"/><ellipse cx="15.5" cy="24" rx="5" ry="3.5" fill="currentColor" transform="rotate(-20 15.5 24)"/><circle cx="8.5" cy="29" r="7" fill="#521c2a" stroke="currentColor" stroke-width="1.1"/>'+control+'</svg>';
 }
 musicState();
-$('#envelope').addEventListener('click',()=>{$('#envelope').classList.add('is-open');audio.play().then(musicState).catch(musicState);setTimeout(()=>{$('#content').inert=false;$('#content').removeAttribute('aria-hidden');document.body.classList.remove('locked');$('#intro').classList.add('open');music.hidden=false;window.scrollTo(0,0);setTimeout(()=>{$('#intro').hidden=true},900)},1200)},{once:true});
+
 music.addEventListener('click',()=>{if(audio.paused)audio.play().then(musicState).catch(musicState);else{audio.pause();musicState()}});
-$('#content').setAttribute('tabindex','-1');
-$('#envelope').addEventListener('click',()=>setTimeout(()=>$('#content').focus({preventScroll:true}),1250),{once:true});
+
+const envelope=$('#envelope'),intro=$('#intro'),content=$('#content');
+let envelopeSeen=false,openingEnvelope=false,openingTimer;
+const silentPreview=new URLSearchParams(location.search).get('preview')==='1';
+if(silentPreview)audio.muted=true;
+function lockInvitation(){clearTimeout(openingTimer);audio.pause();envelopeSeen=false;openingEnvelope=false;intro.hidden=false;intro.classList.remove('departing','open');envelope.classList.remove('is-open');envelope.disabled=true;content.inert=true;content.setAttribute('aria-hidden','true');document.body.classList.add('locked');music.hidden=true;window.scrollTo(0,0)}
+async function prepareEnvelope(){
+ lockInvitation();intro.querySelector('.tap').textContent='Φορτώνει το προσκλητήριο…';
+ try{const art=[...envelope.querySelectorAll('.envelope-art')].find(e=>getComputedStyle(e).display!=='none');const img=new Image();img.src=art.querySelector('image').getAttribute('href');await img.decode();await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));await new Promise(resolve=>setTimeout(resolve,450));envelopeSeen=true;envelope.disabled=false;intro.querySelector('.tap').textContent='Πατήστε για να ανοίξετε'}
+ catch{intro.querySelector('.tap').textContent='Δεν φορτώθηκε ο φάκελος. Πατήστε για επανάληψη.';envelope.disabled=false}
+}
+envelope.addEventListener('click',()=>{
+ if(!envelopeSeen){prepareEnvelope();return}if(openingEnvelope)return;openingEnvelope=true;envelope.disabled=true;
+ envelope.classList.add('is-open');intro.classList.add('departing');intro.querySelector('.tap').textContent='';
+ if(!silentPreview)audio.play().then(musicState).catch(musicState);
+ openingTimer=setTimeout(()=>{content.inert=false;content.removeAttribute('aria-hidden');document.body.classList.remove('locked');intro.hidden=true;music.hidden=false;window.scrollTo(0,0);content.focus({preventScroll:true});window.dispatchEvent(new Event('resize'))},matchMedia('(prefers-reduced-motion: reduce)').matches?450:2200);
+});
+audio.addEventListener('play',()=>{if(!envelopeSeen||!openingEnvelope)audio.pause()});
+window.addEventListener('pagehide',()=>audio.pause());
+window.addEventListener('pageshow',e=>{if(e.persisted)prepareEnvelope()});
+content.setAttribute('tabindex','-1');prepareEnvelope();
+
+
 const wedding=new Date('2026-12-27T16:30:00+02:00');function tick(){const d=Math.max(0,wedding-Date.now()),v=[Math.floor(d/864e5),Math.floor(d/36e5)%24,Math.floor(d/6e4)%60,Math.floor(d/1e3)%60];['days','hours','minutes','seconds'].forEach((id,i)=>$('#'+id).textContent=String(v[i]).padStart(2,'0'))}tick();setInterval(tick,1000);
 const form=$('#rsvpForm');form.addEventListener('change',()=>{const no=form.elements.attendance.value==='Όχι';form.elements.guests.disabled=no;form.elements.guests.required=!no});
 function legacyCopy(value){const input=document.createElement('textarea');input.value=value;input.setAttribute('readonly','');input.style.cssText='position:fixed;opacity:0;pointer-events:none';document.body.appendChild(input);input.select();const copied=document.execCommand('copy');input.remove();return copied}
