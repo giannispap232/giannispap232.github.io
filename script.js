@@ -16,7 +16,7 @@ const envelope=$('#envelope'),intro=$('#intro'),content=$('#content');
 let envelopeSeen=false,openingEnvelope=false,openingTimer;
 const silentPreview=new URLSearchParams(location.search).get('preview')==='1';
 if(silentPreview)audio.muted=true;
-function lockInvitation(){clearTimeout(openingTimer);audio.pause();envelopeSeen=false;openingEnvelope=false;intro.hidden=false;intro.classList.remove('departing','open');envelope.classList.remove('is-open');envelope.disabled=true;content.inert=true;content.setAttribute('aria-hidden','true');document.body.classList.add('locked');music.hidden=true;window.scrollTo(0,0)}
+function lockInvitation(){clearTimeout(openingTimer);audio.pause();envelopeSeen=false;openingEnvelope=false;intro.hidden=false;intro.classList.remove('departing','open');envelope.classList.remove('is-open');envelope.disabled=true;content.inert=true;content.setAttribute('aria-hidden','true');document.body.classList.add('locked');document.body.classList.remove('opening-visible');music.hidden=true;window.scrollTo(0,0)}
 async function prepareEnvelope(){
  lockInvitation();intro.querySelector('.tap').textContent='Φορτώνει το προσκλητήριο…';
  try{const art=[...envelope.querySelectorAll('.envelope-art')].find(e=>getComputedStyle(e).display!=='none');const img=new Image();img.src=art.querySelector('image').getAttribute('href');await img.decode();await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));await new Promise(resolve=>setTimeout(resolve,450));envelopeSeen=true;envelope.disabled=false;intro.querySelector('.tap').textContent='Πατήστε για να ανοίξετε'}
@@ -24,9 +24,9 @@ async function prepareEnvelope(){
 }
 envelope.addEventListener('click',()=>{
  if(!envelopeSeen){prepareEnvelope();return}if(openingEnvelope)return;openingEnvelope=true;envelope.disabled=true;
- envelope.classList.add('is-open');intro.classList.add('departing');intro.querySelector('.tap').textContent='';
+ envelope.classList.add('is-open');intro.classList.add('departing');document.body.classList.add('opening-visible');intro.querySelector('.tap').textContent='';
  if(!silentPreview)audio.play().then(musicState).catch(musicState);
- openingTimer=setTimeout(()=>{content.inert=false;content.removeAttribute('aria-hidden');document.body.classList.remove('locked');intro.hidden=true;music.hidden=false;window.scrollTo(0,0);content.focus({preventScroll:true});window.dispatchEvent(new Event('resize'))},matchMedia('(prefers-reduced-motion: reduce)').matches?450:2200);
+ openingTimer=setTimeout(()=>{content.inert=false;content.removeAttribute('aria-hidden');document.body.classList.remove('locked');intro.hidden=true;music.hidden=false;window.scrollTo(0,0);content.focus({preventScroll:true});window.dispatchEvent(new Event('resize'))},matchMedia('(prefers-reduced-motion: reduce)').matches?450:2800);
 });
 audio.addEventListener('play',()=>{if(!envelopeSeen||!openingEnvelope)audio.pause()});
 window.addEventListener('pagehide',()=>audio.pause());
