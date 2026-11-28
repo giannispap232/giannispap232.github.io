@@ -195,3 +195,26 @@ footer .phone-links a b,footer .phone-links a span{display:inline!important;line
 /* Seal fragments and their shadows rotate around the seal, not the full photograph. */
 .art-landscape .wax-left,.art-landscape .wax-right{transform-box:view-box;transform-origin:49.9402% 63.1243%}
 .art-portrait .wax-left,.art-portrait .wax-right{transform-box:view-box;transform-origin:50.9091% 59.3176%}
+
+/* Curated thumbnails stay completely hidden until approved photos are configured. */
+.guest-carousel[hidden]{display:none!important}
+.guest-carousel{width:min(100%,1000px);margin:24px auto 28px}
+.guest-carousel-track{display:flex;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;list-style:none;padding:0 0 8px!important;margin:0!important;scrollbar-width:thin;scrollbar-color:#b9975e #f5ecdc;border-radius:12px}
+.guest-carousel-track li{flex:0 0 clamp(170px,28vw,280px);scroll-snap-align:start;overflow:hidden;border-radius:12px;background:#eae0ce;aspect-ratio:4/3}
+.guest-carousel-track img{display:block;width:100%;height:100%;object-fit:cover;margin:0;max-width:100%}
+.guest-carousel-controls{display:flex;justify-content:center;align-items:center;gap:14px;margin-top:10px}
+.guest-carousel-controls button{border:1px solid #b9975e;background:#fffcf5;color:#521c2a;border-radius:50%;width:40px;height:40px;padding:0;font:28px/1 sans-serif;cursor:pointer}
+.guest-carousel-controls button:disabled{opacity:.35;cursor:default}
+.guest-carousel-controls button:focus-visible,.guest-carousel-track:focus-visible{outline:2px solid #521c2a;outline-offset:4px}
+.guest-carousel-position{font-size:16px;min-width:46px;color:#521c2a}
+
+/* Projected wax shadows stay on the paper plane while the wax lifts away. */
+.wax-left,.wax-right{filter:none!important}
+.wax-shadow{opacity:0;transform-box:view-box;filter:blur(3px);pointer-events:none}
+.art-landscape .wax-shadow{transform-origin:49.9402% 63.1243%}
+.art-portrait .wax-shadow{transform-origin:50.9091% 59.3176%}
+.is-open .wax-shadow-left{animation:waxShadowLeft 1.1s cubic-bezier(.2,.7,.2,1) forwards}
+.is-open .wax-shadow-right{animation:waxShadowRight 1.1s cubic-bezier(.2,.7,.2,1) forwards}
+@keyframes waxShadowLeft{0%,12%{transform:translate(0,7px);filter:blur(3px);opacity:.30}40%{transform:translate(-9px,24px) rotate(-4deg) scale(1.03);filter:blur(8px);opacity:.23}100%{transform:translate(-25px,95px) rotate(-12deg) scale(1.12);filter:blur(18px);opacity:0}}
+@keyframes waxShadowRight{0%,12%{transform:translate(0,7px);filter:blur(3px);opacity:.30}40%{transform:translate(9px,27px) rotate(5deg) scale(1.03);filter:blur(8px);opacity:.23}100%{transform:translate(25px,105px) rotate(14deg) scale(1.12);filter:blur(18px);opacity:0}}
+@media(prefers-reduced-motion:reduce){.wax-shadow{display:none!important}}
