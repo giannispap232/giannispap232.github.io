@@ -187,3 +187,7 @@ footer .phone-links a b,footer .phone-links a span{display:inline!important;line
 
 /* Original uncut artwork hides all clipping seams until the opening gesture. */
 .intact-cover{opacity:1}.is-open .intact-cover{opacity:0}
+
+/* Shadow and seal clipping belong to their moving artwork, never to the stationary paper. */
+.opening-flap{filter:drop-shadow(0 7px 6px #62524145)}
+.wax-left,.wax-right{filter:drop-shadow(0 3px 2px #521c2a35)}
